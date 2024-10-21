@@ -5,7 +5,7 @@ import 'package:node_auth_todo/features/auth/view/pages/login_page.dart';
 Future<void> main() async {
  
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
