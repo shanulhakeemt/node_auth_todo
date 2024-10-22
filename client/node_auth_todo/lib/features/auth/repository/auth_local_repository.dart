@@ -12,6 +12,7 @@ class AuthLocalRepository {
   late SharedPreferences _sharedPreferences;
 
   Future<void> init() async {
+    print("shared preeeeeeeeeeeee");
     _sharedPreferences = await SharedPreferences.getInstance();
   }
 
@@ -21,8 +22,11 @@ class AuthLocalRepository {
     }
   }
 
+  void clearSharedPreference() {
+    _sharedPreferences.clear();
+  }
+
   String? getToken() {
     return _sharedPreferences.getString('x-auth-token');
   }
-
 }

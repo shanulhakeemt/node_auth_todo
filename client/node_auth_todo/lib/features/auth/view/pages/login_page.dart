@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:node_auth_todo/core/theme/app_pallete.dart';
+import 'package:node_auth_todo/core/utilities.dart';
 import 'package:node_auth_todo/core/widgets/custom_field.dart';
+import 'package:node_auth_todo/core/widgets/loader.dart';
 import 'package:node_auth_todo/features/auth/model/user_model.dart';
 import 'package:node_auth_todo/features/auth/view/pages/signup_page.dart';
 import 'package:node_auth_todo/features/auth/view/widgets/auth_gradient_button.dart';
 import 'package:node_auth_todo/features/auth/viewmodel/auth_viewmodel.dart';
+import 'package:node_auth_todo/features/home/pages/home_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -31,8 +34,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+      final isLoading = ref.watch(authViewModelProvider.select((value) => value?.isLoading==true,));
+    ref.listen(
+      authViewModelProvider,
+      (_, next) {
+        next?.when(
+          data: (data) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomePage(),
+                ), (_) => false,);
+          },
+          error: (error, stackTrace) {
+            showSnackBar(context, error.toString());
+          },
+          loading: () {},
+        );
+      },
+    );
+
     return Scaffold(
-      body: Padding(
+      body:isLoading?const Loader(): Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
           key: formKey,

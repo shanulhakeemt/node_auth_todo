@@ -5,6 +5,10 @@ part 'current_user_notifier.g.dart';
 @Riverpod(keepAlive: true)
 class CurrentUserNotifier extends _$CurrentUserNotifier {
   void addUser(UserModel userModel) {
+    state = userModel;
+  }
+
+  void removeUser() {
     state = null;
   }
 

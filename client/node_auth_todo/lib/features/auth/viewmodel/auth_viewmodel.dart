@@ -12,7 +12,14 @@ class AuthViewModel extends _$AuthViewModel {
   late AuthLocalRepository _authLocalRepository;
   late CurrentUserNotifier _currentUserNotifier;
 
+  Future<void> initSharedPreferences() async {
+    print("ssssssssssssss");
+    await _authLocalRepository.init();
+  }
+
   Future<void> signUpUser(UserModel userModel) async {
+    state = const AsyncValue.loading();
+
     final res = await _authRemoteRepository.signup(userModel);
     final val = switch (res) {
       Left(value: final l) => state = AsyncError(l, StackTrace.current),
@@ -22,6 +29,8 @@ class AuthViewModel extends _$AuthViewModel {
   }
 
   Future<void> loginUser(UserModel userModel) async {
+    state = const AsyncValue.loading();
+
     final res = await _authRemoteRepository.login(userModel);
     final val = switch (res) {
       Left(value: final l) => state = AsyncError(l, StackTrace.current),
@@ -35,7 +44,12 @@ class AuthViewModel extends _$AuthViewModel {
     _currentUserNotifier.addUser(user);
     return state = AsyncValue.data(user);
   }
-    Future<UserModel?> getData() async {
+
+  void clearSharedPreference() {
+    _authLocalRepository.clearSharedPreference();
+  }
+
+  Future<UserModel?> getData() async {
     state = const AsyncValue.loading();
     final token = _authLocalRepository.getToken();
     print("yeah token");
@@ -58,16 +72,17 @@ class AuthViewModel extends _$AuthViewModel {
 
     return null;
   }
-    AsyncValue<UserModel> _getCurrentUser(UserModel user) {
+
+  AsyncValue<UserModel> _getCurrentUser(UserModel user) {
     _currentUserNotifier.addUser(user);
     return state = AsyncValue.data(user);
   }
 
-
-
   @override
   AsyncValue<UserModel>? build() {
     _authRemoteRepository = ref.watch(authRemoteRepositoryProvider);
+    _authLocalRepository = ref.watch(authLocalRepositoryProvider);
+    _currentUserNotifier = ref.watch(currentUserNotifierProvider.notifier);
     return null;
   }
 }
