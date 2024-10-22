@@ -1,3 +1,3 @@
 class ServerConstants {
-  static const String serverUrl = 'http://localhost:3000/';
+  static const String serverUrl = 'http://192.168.102.62:3000/';
 }

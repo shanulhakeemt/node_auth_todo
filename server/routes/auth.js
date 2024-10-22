@@ -42,12 +42,19 @@ authRouter.post("/auth/login", async(req, res) => {
 
         res.json({ token, ...user._doc });
     } catch (e) {
-        return res.status(500).json({ msg: e.message });
+        return res.status(500).json({ error: e.message });
 
     }
 
 
 
 });
+// get user data
+
+// authRouter.get("/", auth, async(req, res) => {
+//     const user = await User.findById(req.user);
+//     res.json({...user._doc, token: req.token });
+
+// });
 
 module.exports = authRouter;
